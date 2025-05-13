@@ -1,29 +1,26 @@
 import "./Testimonials.scss";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { AppWrap, MotionWrap } from "../../wrapper";
 import { urlFor, client } from "../../client";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
+interface Testimonial {
+    name: string;
+    company: string;
+    feedback: string;
+    imageurl: any;
+}
+
 const Testimonials = () => {
-    const [brands, setBrands] = useState([]);
-    const [testimonials, setTestimonials] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+    const [currentIndex, setCurrentIndex] = useState<number>(0);
 
     const handleClick = (index: number) => {
         setCurrentIndex(index);
     };
 
     useEffect(() => {
-        const brandQuery = '*[_type == "brands"]';
         const testimonialsQuery = '*[_type == "testimonial"]';
-
-        client
-            .fetch(brandQuery)
-            .then((data) => {
-                setBrands(data);
-            })
-            .catch((error) => console.error("Error fetching brands:", error));
 
         client
             .fetch(testimonialsQuery)
@@ -83,21 +80,6 @@ const Testimonials = () => {
                     </div>
                 </>
             )}
-
-            <div className="app__testimonial-brands app__flex">
-                {brands.map((brand) => (
-                    <motion.div
-                        whileInView={{ opacity: [0, 1] }}
-                        transition={{ duration: 0.5, type: "tween" }}
-                        key={brand._id}
-                    >
-                        <img
-                            src={urlFor(brand.imgUrl).url()}
-                            alt={brand.name}
-                        />
-                    </motion.div>
-                ))}
-            </div>
         </>
     );
 };

@@ -54,7 +54,7 @@ const Footer = () => {
                 <div className="app__footer-card">
                     <img src={images.mobile} alt="mobile" />
                     <a href="tel:+918299631205" className="p-text">
-                        +91 82 99 631205
+                        +91 8299631205
                     </a>
                 </div>
             </div>
@@ -105,6 +105,11 @@ const Footer = () => {
                     </h3>
                 </div>
             )}
+
+            <div className="copyright">
+                <p className="p-text">&copy;2025 Pranjal Srivastava</p>
+                <p className="p-text">All rights reserved</p>
+            </div>
         </>
     );
 };

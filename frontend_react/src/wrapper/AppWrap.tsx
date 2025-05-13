@@ -12,10 +12,6 @@ const AppWrap = (
                 <SocialMedia />
                 <div className={`app__wrapper app__flex ${classNames}`}>
                     <Component />
-                    <div className="copyright">
-                        <p className="p-text">@2025 Pranjal</p>
-                        <p className="p-text">All rights reserved</p>
-                    </div>
                 </div>
                 <NavigationDots active={idName} />
             </div>

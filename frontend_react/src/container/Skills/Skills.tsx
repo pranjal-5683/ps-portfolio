@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { AppWrap, MotionWrap } from "../../wrapper";
 import { urlFor, client } from "../../client";
-import { Tooltip } from "react-tooltip";
 
 interface Skill {
     name: string;
@@ -22,18 +21,36 @@ interface Experience {
     works: Work[];
 }
 
+interface Brand {
+    _id: string;
+    name: string;
+    imgUrl: any;
+}
+
 const Skills = () => {
+    const [brands, setBrands] = useState<Brand[]>([]);
     const [skills, setSkills] = useState<Skill[]>([]);
-    const [experiences, setExperiences] = useState<any[]>([]);
+    const [experiences, setExperiences] = useState<Experience[]>([]);
 
     useEffect(() => {
+        const brandQuery = '*[_type == "brands"]';
         const skillsQuery = '*[_type == "skills"]';
         const experiencesQuery = '*[_type == "experiences"]';
 
         client
+            .fetch(brandQuery)
+            .then((data) => {
+                setBrands(data);
+            })
+            .catch((error) => console.error("Error fetching brands:", error));
+
+        client
             .fetch(skillsQuery)
             .then((data) => {
-                setSkills(data);
+                const sortedArray = data.sort((a: Skill, b: Skill) =>
+                    a.name.localeCompare(b.name)
+                );
+                setSkills(sortedArray);
             })
             .catch((error) => console.error("Error fetching skills:", error));
 
@@ -88,37 +105,45 @@ const Skills = () => {
                             </div>
                             <motion.div className="app__skills-exp-works">
                                 {experience.works.map((work: Work) => (
-                                    <>
-                                        <motion.div
-                                            className="app__skills-exp-work"
-                                            key={work.name}
-                                            whileInView={{ opacity: [0, 1] }}
-                                            transition={{ duration: 0.5 }}
-                                            data-tooltip-id={work.name}
-                                        >
-                                            <h4 className="bold-text">
-                                                {work.name}
-                                            </h4>
-                                            <p className="p-text">
-                                                {work.company}
-                                            </p>
-                                        </motion.div>
-                                        <Tooltip
-                                            id={work.name}
-                                            place="top"
-                                            className="skills-tooltip"
-                                        >
-                                            {work.desc}
-                                        </Tooltip>
-                                    </>
+                                    <motion.div
+                                        className="app__skills-exp-work"
+                                        key={work.name}
+                                        whileInView={{ opacity: [0, 1] }}
+                                        transition={{ duration: 0.5 }}
+                                        data-tooltip-id={work.name}
+                                    >
+                                        <h4 className="bold-text">
+                                            {work.name} | {work.company}
+                                        </h4>
+                                        <p className="p-text">{work.desc}</p>
+                                    </motion.div>
                                 ))}
                             </motion.div>
                         </motion.div>
                     ))}
                 </motion.div>
             </div>
+
+            <div className="app__exp-brands app__flex">
+                {brands.map((brand) => (
+                    <motion.div
+                        whileInView={{ opacity: [0, 1] }}
+                        transition={{ duration: 0.5, type: "tween" }}
+                        key={brand._id}
+                    >
+                        <img
+                            src={urlFor(brand.imgUrl).url()}
+                            alt={brand.name}
+                        />
+                    </motion.div>
+                ))}
+            </div>
         </>
     );
 };
 
-export default AppWrap(MotionWrap(Skills, "app__skills"), "skills", "app__whitebg");
+export default AppWrap(
+    MotionWrap(Skills, "app__skills"),
+    "skills",
+    "app__whitebg"
+);

@@ -19,9 +19,9 @@ const About = () => {
     return (
         <div className="app__about app__flex">
             <h2 className="head-text">
-                I know that <span>Good Design</span>
+                I know that <span>Strong Architechture</span>
                 <br />
-                means <span>Good Business</span>
+                builds <span>Strong Products</span>
             </h2>
 
             <div className="app__profiles">
